@@ -43,7 +43,7 @@
             <div class="tab-content">
                 @foreach($languges as $key => $language)
                     @foreach($product->products_t as $code => $product_t)
-                        @if($key == $code)
+                        @if($language->code == $product_t->code)
                             <div role="tabpanel" class="tab-pane fade in {{($key==0)?'active':''}}" id="lang_{{$language->code}}">
                                 <div class="col-xs-12 col-sm-12 col-md-12">
                                     <div class="form-group">

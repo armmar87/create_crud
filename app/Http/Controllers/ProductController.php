@@ -17,8 +17,7 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $lang = app()->getLocale();
-        $lang = Session::has('locale')?Session::get('locale'):$lang;
+        $lang = Session::has('locale')?Session::get('locale'):app()->getLocale();
 
         $products = DB::table('products')
             ->join('products_t', 'products.id', '=', 'products_t.product_id')
@@ -151,9 +150,9 @@ class ProductController extends Controller
         $product->save();
 
         $languges = DB::table('languages')->get();
-        foreach ($languges as $key => $languge) {
-            foreach ($product->products_t as $code => $products_t) {
-                if ($key == $code) {
+        foreach ($languges as $languge) {
+            foreach ($product->products_t as $products_t) {
+                if ($languge->code == $products_t->code) {
                     $products_t->code = $languge->code;
                     $products_t->name = !is_null($request['name_' . $languge->code])?$request['name_' . $languge->code]:'';
                     $products_t->description = !is_null($request['description_' . $languge->code])?$request['description_' . $languge->code]:'';
@@ -176,8 +175,54 @@ class ProductController extends Controller
     public function destroy(Product $product)
     {
         $product->delete();
-
         return redirect()->route('products.index')
             ->with('success','Product deleted successfully');
     }
+
+    public function searchProducts(Request $request)
+    {
+        request()->validate([
+            'search' => 'required',
+        ]);
+        $lang = Session::has('locale')?Session::get('locale'):app()->getLocale();
+        if($request->has('search')) {
+            $search = $request->input('search');
+            $search_data = explode(' ' , $search);
+            $products = DB::table('products')
+                ->leftjoin('products_t', 'products.id', '=', 'products_t.product_id')
+                ->select('products.*', 'products_t.name as prod_name', 'products_t.description')
+                ->where('products_t.code', $lang)
+                ->where(function ($q) use ($search_data) {
+                    foreach($search_data as $data){
+                        $q->where('products_t.name', 'LIKE', '%' . strtolower($data) . '%');
+                        $q->orWhere('products_t.description', 'LIKE', '%' . strtolower($data) . '%');
+                    }})
+                ->get();
+
+            return view('products.index',compact('products'));
+        }
+    }
+
+    public function searchProductsToPrice(Request $request)
+    {
+        request()->validate([
+            'from' => 'required|integer',
+            'to' => 'required|integer',
+        ]);
+        $lang = Session::has('locale')?Session::get('locale'):app()->getLocale();
+        if($request->has('from') && $request->has('to')) {
+            $from = $request->input('from');
+            $to = $request->input('to');
+
+            $products = DB::table('products')
+                ->leftjoin('products_t', 'products.id', '=', 'products_t.product_id')
+                ->select('products.*', 'products_t.name as prod_name', 'products_t.description')
+                ->whereBetween('products.price', [$from, $to])
+                ->where('products_t.code', $lang)
+                ->get();
+
+            return view('products.index',compact('products'));
+        }
+    }
+
 }
