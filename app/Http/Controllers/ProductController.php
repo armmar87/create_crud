@@ -104,9 +104,10 @@ class ProductController extends Controller
      * @param  \App\Product  $product
      * @return \Illuminate\Http\Response
      */
-    public function edit(Product $product)
+    public function edit($id)
     {
-//        dd($product);
+        $product = Product::with('products_t')->find($id);
+//        dd($product->products_t);
         $languges = DB::table('languages')->get();
         return view('products.edit',compact('product', 'languges'));
     }
@@ -118,9 +119,52 @@ class ProductController extends Controller
      * @param  \App\Product  $product
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Product $product)
+    public function update(Request $request, $id)
     {
-        //
+        request()->validate([
+            'name_hy' => 'required',
+            'description_hy' => 'required',
+            'price' => 'required|integer',
+            'discount' => 'integer',
+            'quantity' => 'integer',
+            'image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        ]);
+
+        $product = Product::with('products_t')->find($id);
+
+        $image_name = $product->image;
+        if($request->hasFile('image')) {
+            $image = $request->file('image');
+            $image_name = time().'.'.$image->getClientOriginalExtension();
+            $destinationPath = public_path('/images');
+            $image->move($destinationPath, $image_name);
+            $image_path = public_path('images/' . $product->image);
+            if(file_exists($image_path)){
+                @unlink($image_path);
+            }
+        }
+
+        $product->price = $request->price;
+        $product->discount = $request->discount;
+        $product->quantity = $request->quantity;
+        $product->image = $image_name;
+        $product->save();
+
+        $languges = DB::table('languages')->get();
+        foreach ($languges as $key => $languge) {
+            foreach ($product->products_t as $code => $products_t) {
+                if ($key == $code) {
+                    $products_t->code = $languge->code;
+                    $products_t->name = !is_null($request['name_' . $languge->code])?$request['name_' . $languge->code]:'';
+                    $products_t->description = !is_null($request['description_' . $languge->code])?$request['description_' . $languge->code]:'';
+                    $products_t->save();
+                }
+            }
+        }
+
+
+        return redirect()->route('products.index')
+            ->with('success','Product updated successfully');
     }
 
     /**
@@ -131,6 +175,9 @@ class ProductController extends Controller
      */
     public function destroy(Product $product)
     {
-        //
+        $product->delete();
+
+        return redirect()->route('products.index')
+            ->with('success','Product deleted successfully');
     }
 }

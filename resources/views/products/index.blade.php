@@ -23,17 +23,22 @@
     <table class="table table-bordered">
         <tr>
             <th>No</th>
+            <th>Image</th>
             <th>Name</th>
             <th>Description</th>
+            <th>Price</th>
             <th width="280px">Action</th>
         </tr>
 
         @foreach ($products as $key => $product)
 
+            {{--{{dd($product->image)}}--}}
             <tr>
                 <td>{{ $key+1 }}</td>
+                <td><img height="40" src="{{asset('images/'.$product->image)}}"></td>
                 <td>{{ $product->prod_name }}</td>
                 <td>{{ $product->description}}</td>
+                <td>{{ $product->price}}</td>
                 <td>
                     <form action="{{ route('products.destroy',$product->id) }}" method="POST">
 
