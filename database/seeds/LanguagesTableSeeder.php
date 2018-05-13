@@ -12,13 +12,13 @@ class LanguagesTableSeeder extends Seeder
     public function run()
     {
         DB::table('languages')->delete();
-        \DB::table('languages')->insert([
-            'name' => 'Armenian',
-            'code' => 'hy',
-        ]);
-        \DB::table('languages')->insert([
-            'name' => 'English',
-            'code' => 'en',
-        ]);
+
+        foreach (config('languages') as $lang){
+            \DB::table('languages')->insert([
+                'name' => $lang['name'],
+                'code' => $lang['code'],
+            ]);
+        }
+
     }
 }
