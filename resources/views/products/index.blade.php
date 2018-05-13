@@ -61,6 +61,8 @@
             <th>Name</th>
             <th>Description</th>
             <th>Price</th>
+            <th>Discount</th>
+            <th>Quantity</th>
             <th width="280px">Action</th>
         </tr>
 
@@ -72,6 +74,8 @@
                 <td>{{ $product->prod_name }}</td>
                 <td>{{ $product->description}}</td>
                 <td>{{ $product->price}}</td>
+                <td>{{ $product->discount}}</td>
+                <td>{{ $product->quantity}}</td>
                 <td>
                     <form action="{{ route('products.destroy',$product->id) }}" method="POST">
 

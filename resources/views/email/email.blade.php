@@ -35,7 +35,16 @@
                             <strong>Price:</strong>
                             {{ $product->price }}
                         </div>
-                    </div><div style="padding:15px 0;">
+                        <div class="form-group">
+                            <strong>Discount:</strong>
+                            {{ $product->discount }}
+                        </div>
+                        <div class="form-group">
+                            <strong>Quantity:</strong>
+                            {{ $product->quantity }}
+                        </div>
+                    </div>
+                    <div style="padding:15px 0;">
                         <a href="{{url('/download_pdf?p=' . $product->id)}}" style="display:block; margin:0 auto; widt:100%; max-width:250px; text-align:center; font-weight:bold; padding:12px 15px; text-decoration:none; background:#FFA300; color:#FFF;">
                             Download pdf
                         </a>

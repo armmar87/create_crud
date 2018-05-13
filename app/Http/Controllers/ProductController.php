@@ -22,12 +22,14 @@ class ProductController extends Controller
 //        $products = Product::all();
 //        $ids = array();
 //        foreach ($products as $prod) {
+//            $prod->discount = 0;
+//            $prod->save();
 //            $ids[] = $prod->id;
 //        }
 //        $length = count($ids);
 //        $id = $ids[rand(0, $length-1)];
 //        $product = Product::find($id);
-//        $product->price = $product->price/2;
+//        $product->discount = 50;
 //        $product->save();
 
         $products = DB::table('products')

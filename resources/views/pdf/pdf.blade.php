@@ -32,6 +32,14 @@
             <strong>Price:</strong>
             {{ $product->price }}
         </div>
+        <div class="form-group">
+            <strong>Discount:</strong>
+            {{ $product->discount }}
+        </div>
+        <div class="form-group">
+            <strong>Quantity:</strong>
+            {{ $product->quantity }}
+        </div>
     </div>
 </div>
 
