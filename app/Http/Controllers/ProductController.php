@@ -225,4 +225,35 @@ class ProductController extends Controller
         }
     }
 
+    public function exportCsvFile()
+    {
+
+        $lang = Session::has('locale')?Session::get('locale'):app()->getLocale();
+        $products = DB::table('products')
+            ->leftjoin('products_t', 'products.id', '=', 'products_t.product_id')
+            ->select('products.*', 'products_t.name as prod_name', 'products_t.description')
+            ->where('products_t.code', $lang)
+            ->get();
+
+        $filename = "file.csv";
+        $handle = fopen($filename, 'w+');
+
+        foreach($products->toArray() as $product){
+            $data = [];
+            foreach($product as $key => $row){
+                $data[] = $key .' - '. $row;
+            }
+
+            fputcsv($handle, $data);
+        }
+        fclose($handle);
+
+        $headers = array(
+            'Content-Type' => 'text/csv',
+        );
+        return response()->download($filename, 'file '.date("d-m-Y H:i").'.csv', $headers);
+
+
+    }
+
 }

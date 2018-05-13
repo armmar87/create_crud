@@ -8,7 +8,7 @@
             </div>
             <div class="pull-right">
                 <a class="btn btn-success" href="{{ route('products.create') }}"> Create New Product</a>
-                <a class="btn btn-primary" href="{{ url('/export_csv') }}"> Export Csv</a>
+                <a class="btn btn-primary" href="{{ url('/export-csv') }}"> Export Csv</a>
             </div>
         </div>
     </div>
@@ -20,7 +20,7 @@
                 @csrf
                 <div class="input-group">
                      <span class="input-group-btn">
-                        <button class="btn btn-secondary" type="submit">Go!</button>
+                        <button class="btn btn-secondary" type="submit">Search</button>
                      </span>
                      <input type="text" class="form-control" name="search" placeholder="Search ...">
                 </div>
@@ -28,7 +28,7 @@
         </div>
 
         <div class="col-lg-4">
-            <form action="{{ url('/search_to_price')}}" method="POST">
+            <form action="{{ url('/search-to-price')}}" method="POST">
                 @csrf
 
                 <span class="input-group-btn">

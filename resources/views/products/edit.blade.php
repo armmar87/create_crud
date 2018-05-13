@@ -32,7 +32,7 @@
         <ul class="nav nav-tabs" role="tablist">
             @foreach($languges as $key => $language)
                 <li class="nav-item">
-                    <a class="nav-link {{($key==0)?'active':''}}" href="#lang_{{$language->code}}" role="tab" data-toggle="tab">{{$language->name}}</a>
+                    <a class="nav-link tab_link {{($key==0)?'active':''}}" href="#lang_{{$language->code}}" role="tab" data-toggle="tab">{{$language->name}}</a>
                 </li>
             @endforeach
         </ul>

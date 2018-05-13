@@ -14,5 +14,6 @@
 Route::get('/', 'ProductController@index');
 Route::get('set_lang/{lang}', 'LanguageController@setLanguage');
 Route::post('/search', 'ProductController@searchProducts');
-Route::post('/search_to_price', 'ProductController@searchProductsToPrice');
+Route::post('/search-to-price', 'ProductController@searchProductsToPrice');
+Route::get('/export-csv', 'ProductController@exportCsvFile');
 Route::resource('products','ProductController');
