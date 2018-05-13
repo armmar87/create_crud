@@ -47,7 +47,6 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-
         request()->validate([
             'name_hy' => 'required',
             'description_hy' => 'required',
@@ -92,9 +91,20 @@ class ProductController extends Controller
      * @param  \App\Product  $product
      * @return \Illuminate\Http\Response
      */
-    public function show(Product $product)
+    public function show($id)
     {
-        //
+        $lang = Session::has('locale')?Session::get('locale'):app()->getLocale();
+
+        $product = DB::table('products')
+            ->join('products_t', 'products.id', '=', 'products_t.product_id')
+            ->select('products.*', 'products_t.name as prod_name', 'products_t.description')
+            ->where('products.id', $id)
+            ->where('products_t.code', $lang)
+            ->first();
+
+//        dd($product);
+
+        return view('products.show',compact('product'));
     }
 
     /**
@@ -106,7 +116,7 @@ class ProductController extends Controller
     public function edit($id)
     {
         $product = Product::with('products_t')->find($id);
-//        dd($product->products_t);
+
         $languges = DB::table('languages')->get();
         return view('products.edit',compact('product', 'languges'));
     }
@@ -252,7 +262,6 @@ class ProductController extends Controller
             'Content-Type' => 'text/csv',
         );
         return response()->download($filename, 'file '.date("d-m-Y H:i").'.csv', $headers);
-
 
     }
 

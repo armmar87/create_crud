@@ -8,8 +8,9 @@
 <body>
 
 <div class="lang_container">
-    <a href="{{url('set_lang/hy')}}">hy</a>
-    <a href="{{url('set_lang/en')}}">en</a>
+    @foreach($locations as $location)
+        <a href="{{url('set-lang/' . $location->code)}}">{{$location->code}}</a>
+    @endforeach
 </div>
 
 <div class="container">
