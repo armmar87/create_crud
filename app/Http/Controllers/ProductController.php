@@ -19,6 +19,17 @@ class ProductController extends Controller
     {
         $lang = Session::has('locale')?Session::get('locale'):app()->getLocale();
 
+//        $products = Product::all();
+//        $ids = array();
+//        foreach ($products as $prod) {
+//            $ids[] = $prod->id;
+//        }
+//        $length = count($ids);
+//        $id = $ids[rand(0, $length-1)];
+//        $product = Product::find($id);
+//        $product->price = $product->price/2;
+//        $product->save();
+
         $products = DB::table('products')
             ->join('products_t', 'products.id', '=', 'products_t.product_id')
             ->select('products.*', 'products_t.name as prod_name', 'products_t.description')
@@ -101,8 +112,6 @@ class ProductController extends Controller
             ->where('products.id', $id)
             ->where('products_t.code', $lang)
             ->first();
-
-//        dd($product);
 
         return view('products.show',compact('product'));
     }
