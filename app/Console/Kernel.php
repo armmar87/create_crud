@@ -2,8 +2,10 @@
 
 namespace App\Console;
 
+use App\Product;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
+use Illuminate\Support\Facades\DB;
 
 class Kernel extends ConsoleKernel
 {
@@ -26,6 +28,21 @@ class Kernel extends ConsoleKernel
     {
         // $schedule->command('inspire')
         //          ->hourly();
+
+        $schedule->call(function () {
+            $products = Product::all();
+            $ids = array();
+            foreach ($products as $prod) {
+                $prod->discount = 0;
+                $prod->save();
+                $ids[] = $prod->id;
+            }
+            $length = count($ids);
+            $id = $ids[rand(0, $length-1)];
+            $product = Product::find($id);
+            $product->discount = 50;
+            $product->save();
+        })->daily();
     }
 
     /**
